@@ -5,18 +5,31 @@ An opinionated, production-minded NestJS starter for API-first side projects.
 It favors a small modular monolith, explicit module interfaces, PostgreSQL, and transparent SQL over
 premature distributed architecture or generic repository abstractions.
 
-## Stack
+## Built-in capabilities
 
-- Node.js 24 and TypeScript 6
-- NestJS 11 with native ESM
-- PostgreSQL 18 and Drizzle ORM
-- Zod environment validation
-- Pino structured logging correlated with OpenTelemetry traces
-- Vendor-neutral OpenTelemetry tracing for HTTP, NestJS, and PostgreSQL
-- Swagger and a committed OpenAPI document
-- Vitest and Supertest
-- ESLint, Prettier, dependency-cruiser, and Knip
-- Docker Compose and GitHub Actions
+Versions are defined in [`package.json`](package.json). This table describes why each dependency is
+included and what the starter configures for it.
+
+| Concern                    | Libraries                                                                                                                                                      | What the starter provides                                                            |
+| -------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------ |
+| Runtime                    | [Node.js](https://github.com/nodejs/node), [TypeScript](https://github.com/microsoft/TypeScript), [pnpm](https://github.com/pnpm/pnpm)                         | Node.js 24, TypeScript 6, native ESM, and a pinned package-manager version           |
+| Application framework      | [NestJS](https://github.com/nestjs/nest)                                                                                                                       | A single API composition root organized as a modular monolith                        |
+| Configuration              | [NestJS Config](https://github.com/nestjs/config), [Zod](https://github.com/colinhacks/zod)                                                                    | Fail-fast environment parsing with typed configuration                               |
+| HTTP validation            | [class-validator](https://github.com/typestack/class-validator), [class-transformer](https://github.com/typestack/class-transformer)                           | A global `ValidationPipe` that rejects unknown fields and transforms request DTOs    |
+| Database access            | [PostgreSQL](https://github.com/postgres/postgres), [node-postgres](https://github.com/brianc/node-postgres)                                                   | PostgreSQL 18 with pooled connections and lifecycle management                       |
+| SQL and migrations         | [Drizzle ORM and Drizzle Kit](https://github.com/drizzle-team/drizzle-orm)                                                                                     | Typed SQL, module-owned schemas, and committed migrations                            |
+| Structured logging         | [Pino](https://github.com/pinojs/pino), [pino-http](https://github.com/pinojs/pino-http), [nestjs-pino](https://github.com/iamolegga/nestjs-pino)              | JSON request logging in production and readable local development output             |
+| Distributed tracing        | [OpenTelemetry JS](https://github.com/open-telemetry/opentelemetry-js), [OpenTelemetry JS Contrib](https://github.com/open-telemetry/opentelemetry-js-contrib) | HTTP, NestJS, PostgreSQL, and Pino trace correlation with vendor-neutral OTLP export |
+| API documentation          | [NestJS Swagger](https://github.com/nestjs/swagger)                                                                                                            | Swagger UI and a committed OpenAPI document with drift detection                     |
+| Unit and integration tests | [Vitest](https://github.com/vitest-dev/vitest)                                                                                                                 | Unit tests, configuration tests, and Nest dependency-injection smoke tests           |
+| HTTP end-to-end tests      | [Supertest](https://github.com/ladjs/supertest)                                                                                                                | PostgreSQL-backed tests against the real NestJS HTTP application                     |
+| Static analysis            | [ESLint](https://github.com/eslint/eslint), [typescript-eslint](https://github.com/typescript-eslint/typescript-eslint)                                        | Type-aware linting with zero warnings allowed                                        |
+| Formatting                 | [Prettier](https://github.com/prettier/prettier)                                                                                                               | Deterministic formatting checked in CI                                               |
+| Architecture checks        | [dependency-cruiser](https://github.com/sverweij/dependency-cruiser)                                                                                           | Circular dependency, deep import, and module-boundary enforcement                    |
+| Dead-code checks           | [Knip](https://github.com/webpro-nl/knip)                                                                                                                      | Detection of unused production files, exports, and dependencies                      |
+
+Production packaging uses [Docker](https://github.com/docker), and repository verification runs
+through [GitHub Actions](https://github.com/features/actions).
 
 Provider-specific PostgreSQL SDKs are intentionally excluded. Configure any compatible PostgreSQL
 database with `DATABASE_URL`.

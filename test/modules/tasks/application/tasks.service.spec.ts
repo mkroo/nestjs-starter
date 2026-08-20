@@ -1,8 +1,8 @@
 import { describe, expect, it } from 'vitest';
 
-import type { Task } from '../index.js';
-import type { TaskStore } from './task-store.js';
-import { TasksService } from './tasks.service.js';
+import type { TaskStore } from '../../../../src/modules/tasks/application/task-store.js';
+import { TasksService } from '../../../../src/modules/tasks/application/tasks.service.js';
+import type { Task } from '../../../../src/modules/tasks/index.js';
 
 class InMemoryTaskStore implements TaskStore {
   readonly #tasks: Task[] = [];

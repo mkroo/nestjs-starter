@@ -78,7 +78,9 @@ src/
     ├── logging/          # Pino 구조화 로깅
     └── telemetry/        # OpenTelemetry tracing 및 OTLP 내보내기
 openapi/                  # 생성된 OpenAPI 문서
-test/e2e/                 # PostgreSQL 기반 HTTP 테스트
+test/                     # 단위·통합 테스트에서 src/ 경로를 미러링
+├── e2e/                  # PostgreSQL 기반 HTTP 테스트
+└── support/              # 공통 테스트 설정
 ```
 
 기능을 추가하기 전에 [docs/architecture.md](docs/architecture.md)를 읽어주세요.
@@ -92,6 +94,8 @@ test/e2e/                 # PostgreSQL 기반 HTTP 테스트
 - 테이블 스키마와 쿼리 어댑터는 해당 데이터를 소유하는 기능 모듈 안에 둡니다.
 - 기능 모듈의 공개 인터페이스에 Drizzle 타입을 노출하지 않습니다.
 - 리포지터리 인터페이스는 테스트나 구현 교체를 위한 실질적인 경계가 있을 때만 추가합니다.
+- `src/<path>/<file>.ts`의 테스트는 `test/<path>/<file>.spec.ts`에 작성하고, HTTP E2E 테스트는
+  `test/e2e` 아래에 둡니다.
 
 ## 명령어
 

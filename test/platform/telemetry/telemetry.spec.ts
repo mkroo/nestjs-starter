@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import { parseTelemetryEnvironment } from './telemetry-environment.js';
+import { parseTelemetryEnvironment } from '../../../src/platform/telemetry/telemetry-environment.js';
 
 describe('parseTelemetryEnvironment', () => {
   it('uses vendor-neutral defaults without exporting spans', () => {

@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import { parseEnvironment } from './environment.js';
+import { parseEnvironment } from '../../src/config/environment.js';
 
 describe('parseEnvironment', () => {
   it('applies safe application defaults', () => {

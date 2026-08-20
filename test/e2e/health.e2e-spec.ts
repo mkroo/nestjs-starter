@@ -30,6 +30,12 @@ describe('health', () => {
     const server = app.getHttpServer() as Server;
     const response = await request(server).get('/api/health/ready').expect(200);
 
-    expect(response.body).toEqual({ status: 'ok' });
+    expect(response.body).toEqual({
+      status: 'ok',
+      info: { postgres: { status: 'up' } },
+      error: {},
+      details: { postgres: { status: 'up' } },
+    });
+    expect(response.headers['cache-control']).toBe('no-cache, no-store, must-revalidate');
   });
 });

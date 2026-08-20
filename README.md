@@ -4,6 +4,10 @@
 
 An opinionated, production-minded NestJS starter for API-first side projects.
 
+> This is the `example` branch. It extends the minimal
+> [`main`](https://github.com/mkroo/nestjs-starter/tree/main) template with a complete
+> PostgreSQL-backed Tasks vertical slice.
+
 It favors a small modular monolith, explicit module interfaces, PostgreSQL, and transparent SQL over
 premature distributed architecture or generic repository abstractions.
 

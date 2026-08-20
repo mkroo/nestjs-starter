@@ -4,6 +4,10 @@
 
 API 중심 사이드 프로젝트를 위한 명확한 기술 선택과 운영 환경을 고려한 NestJS 스타터입니다.
 
+> 현재 브랜치는 `example`입니다. 최소 구성인
+> [`main`](https://github.com/mkroo/nestjs-starter/tree/main) 템플릿에 PostgreSQL을 사용하는
+> 완전한 Tasks 수직 슬라이스를 추가한 참고 구현입니다.
+
 성급한 분산 아키텍처나 범용 리포지터리 추상화 대신, 작은 모듈러 모놀리스와 명시적인 모듈
 인터페이스, PostgreSQL, 투명한 SQL을 지향합니다.
 

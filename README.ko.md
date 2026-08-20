@@ -18,6 +18,7 @@ API 중심 사이드 프로젝트를 위한 명확한 기술 선택과 운영 �
 | 애플리케이션 프레임워크 | [NestJS](https://github.com/nestjs/nest)                                                                                                                       | 모듈러 모놀리스로 구성된 단일 API 컴포지션 루트                              |
 | 설정                    | [NestJS Config](https://github.com/nestjs/config), [Zod](https://github.com/colinhacks/zod)                                                                    | 오류가 있으면 시작 즉시 실패하는 타입 기반 환경변수 파싱                     |
 | HTTP 검증               | [class-validator](https://github.com/typestack/class-validator), [class-transformer](https://github.com/typestack/class-transformer)                           | 알 수 없는 필드를 거부하고 요청 DTO를 변환하는 전역 `ValidationPipe`         |
+| HTTP 보안               | [Helmet](https://github.com/helmetjs/helmet)                                                                                                                   | Swagger와 호환되는 콘텐츠 보안 정책 및 보안 응답 헤더                        |
 | 데이터베이스 접근       | [PostgreSQL](https://github.com/postgres/postgres), [node-postgres](https://github.com/brianc/node-postgres)                                                   | PostgreSQL 18 연결 풀과 생명주기 관리                                        |
 | SQL 및 마이그레이션     | [Drizzle ORM and Drizzle Kit](https://github.com/drizzle-team/drizzle-orm)                                                                                     | 타입 안전한 SQL, 모듈별 스키마 소유권 및 생성되는 마이그레이션               |
 | 상태 확인               | [NestJS Terminus](https://github.com/nestjs/terminus)                                                                                                          | 가벼운 liveness와 표준화된 PostgreSQL readiness 확인                         |
@@ -103,6 +104,7 @@ test/                     # 단위·통합 테스트에서 src/ 경로를 미러
 | 명령어                    | 설명                                         |
 | ------------------------- | -------------------------------------------- |
 | `pnpm dev`                | watch mode로 API 실행                        |
+| `pnpm clean`              | 오래된 운영 빌드 산출물 제거                 |
 | `pnpm build`              | 운영용 JavaScript 빌드                       |
 | `pnpm db:generate`        | 기능 모듈의 스키마에서 SQL 마이그레이션 생성 |
 | `pnpm db:migrate`         | 커밋된 마이그레이션 적용                     |

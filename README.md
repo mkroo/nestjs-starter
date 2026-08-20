@@ -18,6 +18,7 @@ included and what the starter configures for it.
 | Application framework      | [NestJS](https://github.com/nestjs/nest)                                                                                                                       | A single API composition root organized as a modular monolith                        |
 | Configuration              | [NestJS Config](https://github.com/nestjs/config), [Zod](https://github.com/colinhacks/zod)                                                                    | Fail-fast environment parsing with typed configuration                               |
 | HTTP validation            | [class-validator](https://github.com/typestack/class-validator), [class-transformer](https://github.com/typestack/class-transformer)                           | A global `ValidationPipe` that rejects unknown fields and transforms request DTOs    |
+| HTTP security              | [Helmet](https://github.com/helmetjs/helmet)                                                                                                                   | Secure response headers with a Swagger-compatible content security policy            |
 | Database access            | [PostgreSQL](https://github.com/postgres/postgres), [node-postgres](https://github.com/brianc/node-postgres)                                                   | PostgreSQL 18 with pooled connections and lifecycle management                       |
 | SQL and migrations         | [Drizzle ORM and Drizzle Kit](https://github.com/drizzle-team/drizzle-orm)                                                                                     | Typed SQL and module-owned schemas with generated migrations                         |
 | Health checks              | [NestJS Terminus](https://github.com/nestjs/terminus)                                                                                                          | Lightweight liveness and standardized PostgreSQL readiness checks                    |
@@ -104,6 +105,7 @@ Read [docs/architecture.md](docs/architecture.md) before adding a feature.
 | Command                   | Purpose                                       |
 | ------------------------- | --------------------------------------------- |
 | `pnpm dev`                | Run the API in watch mode                     |
+| `pnpm clean`              | Remove stale production build output          |
 | `pnpm build`              | Build production JavaScript                   |
 | `pnpm db:generate`        | Generate SQL migrations from feature schemas  |
 | `pnpm db:migrate`         | Apply committed migrations                    |

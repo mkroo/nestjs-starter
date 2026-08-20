@@ -1,0 +1,113 @@
+name: Starter feedback
+description: Report a reproducible defect or broadly applicable problem in the NestJS starter.
+title: '[Starter feedback]: '
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for helping improve the starter. This repository is public. Remove secrets,
+        credentials, proprietary code, customer data, and private links before submitting.
+
+        Do not use this form for security vulnerabilities that require private disclosure.
+
+  - type: dropdown
+    id: category
+    attributes:
+      label: Category
+      options:
+        - Reproducible starter defect
+        - Unsafe default
+        - Broken CI or development workflow
+        - Documentation error
+        - Supported-version incompatibility
+        - Broadly applicable starter improvement
+    validations:
+      required: true
+
+  - type: input
+    id: starter-revision
+    attributes:
+      label: Starter revision
+      description: Provide the commit or tag used to create the project, or write `unknown`.
+      placeholder: c3bbe2a or unknown
+    validations:
+      required: true
+
+  - type: input
+    id: runtime-versions
+    attributes:
+      label: Runtime versions
+      description: Include the operating system, Node.js version, and pnpm version.
+      placeholder: macOS 15, Node.js 24.6.0, pnpm 10.34.5
+    validations:
+      required: true
+
+  - type: dropdown
+    id: downstream-modifications
+    attributes:
+      label: Were the affected starter files modified downstream?
+      options:
+        - No
+        - Yes
+        - Unsure
+    validations:
+      required: true
+
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Minimal reproduction
+      description: List the smallest sequence that reproduces the problem from the starter configuration.
+      placeholder: |
+        1. Create a project from revision ...
+        2. Run ...
+        3. Observe ...
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behavior
+      description: Describe what the starter should do.
+    validations:
+      required: true
+
+  - type: textarea
+    id: actual
+    attributes:
+      label: Actual behavior
+      description: Describe what happened instead.
+    validations:
+      required: true
+
+  - type: textarea
+    id: logs
+    attributes:
+      label: Sanitized logs
+      description: Include only logs needed to understand the problem. Remove all sensitive data first.
+      render: shell
+    validations:
+      required: false
+
+  - type: input
+    id: reproduction-url
+    attributes:
+      label: Public minimal reproduction URL
+      description: Optional. Link only to a repository that is intentionally public and contains no sensitive data.
+    validations:
+      required: false
+
+  - type: checkboxes
+    id: confirmations
+    attributes:
+      label: Confirmation
+      options:
+        - label: I searched the existing issues for duplicates.
+          required: true
+        - label: I verified that this is not caused only by project-specific code or requirements.
+          required: true
+        - label: I removed secrets, credentials, private links, proprietary code, and customer data.
+          required: true
+        - label: This is not a security vulnerability that requires private disclosure.
+          required: true

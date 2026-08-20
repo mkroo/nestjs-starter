@@ -16,4 +16,8 @@ unit tests, the production build, OpenAPI drift, migrations, and PostgreSQL-back
 The duplicate analyzer is advisory. Review unresolved candidates with the
 `review-duplicate-logic` skill before consolidating or intentionally separating the implementations.
 
+Mirror production paths under `test` for unit and integration tests. For example,
+`src/modules/tasks/tasks.service.ts` is tested by `test/modules/tasks/tasks.service.spec.ts`. Keep
+HTTP end-to-end suites under `test/e2e`.
+
 Keep commits focused and include a behavior test for changes to a public module interface.

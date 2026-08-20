@@ -83,7 +83,9 @@ src/
     └── telemetry/        # OpenTelemetry tracing and OTLP export
 drizzle/                  # generated SQL migrations
 openapi/                  # generated OpenAPI document
-test/e2e/                 # PostgreSQL-backed HTTP tests
+test/                     # mirrors src/ for unit and integration tests
+├── e2e/                  # PostgreSQL-backed HTTP tests
+└── support/              # shared test setup
 ```
 
 Read [docs/architecture.md](docs/architecture.md) before adding a feature.
@@ -97,6 +99,8 @@ Read [docs/architecture.md](docs/architecture.md) before adding a feature.
 - Every table schema and query adapter stays in the feature that owns the data.
 - Drizzle types do not appear in a feature's public interface.
 - A repository interface is added only when it represents a real testing or implementation seam.
+- Tests for `src/<path>/<file>.ts` live at `test/<path>/<file>.spec.ts`; HTTP end-to-end suites stay
+  under `test/e2e`.
 
 ## Commands
 

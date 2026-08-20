@@ -11,6 +11,9 @@
   core starter without an explicit decision.
 - Add behavior tests through module interfaces. Add PostgreSQL e2e coverage for persistence and HTTP
   changes.
+- Put tests for `src` files under the matching `test` path instead of colocating them. For example,
+  test `src/modules/tasks/tasks.service.ts` in `test/modules/tasks/tasks.service.spec.ts`. Keep HTTP
+  end-to-end suites under `test/e2e`.
 - After adding or materially changing production TypeScript behavior, use the
   `review-duplicate-logic` skill before completing the task.
 - Treat AST similarity as a review candidate, not a violation. Never extract shared code from a

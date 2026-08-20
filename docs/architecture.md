@@ -50,7 +50,8 @@ intentional separation, or defer until the domain is clearer.
 ## Adding a feature
 
 1. Create `src/modules/<feature>` with a root `index.ts` and `composition/index.ts`.
-2. Start with one behavior test against the root business interface.
+2. Start with one behavior test against the root business interface under
+   `test/modules/<feature>/`, mirroring its `src/modules/<feature>/` path.
 3. Add an internal persistence seam only when the behavior needs persistence.
 4. Keep the Drizzle schema and adapter under that feature.
 5. Import the Nest module from `src/composition/app.module.ts` through its composition entry point.

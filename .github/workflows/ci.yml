@@ -55,3 +55,25 @@ jobs:
 
       - name: Build container image
         run: docker build --tag nestjs-starter:ci .
+
+      - name: Smoke test container image
+        run: |
+          docker run --detach --name nestjs-starter-ci --network host \
+            --env DATABASE_URL="$DATABASE_URL" \
+            --env LOG_LEVEL=silent \
+            nestjs-starter:ci
+
+          for attempt in {1..20}; do
+            if curl --fail --silent http://localhost:3000/api/health/live >/dev/null && \
+               curl --fail --silent http://localhost:3000/api/health/ready >/dev/null; then
+              exit 0
+            fi
+            sleep 1
+          done
+
+          docker logs nestjs-starter-ci
+          exit 1
+
+      - name: Stop container image
+        if: always()
+        run: docker rm --force nestjs-starter-ci || true

@@ -28,4 +28,21 @@ describe('PostgresHealthIndicator', () => {
       postgres: { status: 'down' },
     });
   });
+
+  it('reports PostgreSQL as unavailable when the probe times out', async () => {
+    vi.useFakeTimers();
+
+    try {
+      execute.mockReturnValue(new Promise(() => undefined));
+      const result = healthIndicator.check();
+
+      await vi.advanceTimersByTimeAsync(1_000);
+
+      await expect(result).resolves.toEqual({
+        postgres: { status: 'down' },
+      });
+    } finally {
+      vi.useRealTimers();
+    }
+  });
 });

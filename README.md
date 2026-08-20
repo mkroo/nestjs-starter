@@ -1,5 +1,7 @@
 # NestJS Starter
 
+[English](README.md) | [한국어](README.ko.md)
+
 An opinionated, production-minded NestJS starter for API-first side projects.
 
 It favors a small modular monolith, explicit module interfaces, PostgreSQL, and transparent SQL over

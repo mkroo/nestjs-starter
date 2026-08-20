@@ -13,11 +13,11 @@ describe('parseTelemetryEnvironment', () => {
   it('accepts the standard OTLP exporter', () => {
     expect(
       parseTelemetryEnvironment({
-        OTEL_SERVICE_NAME: 'tasks-api',
+        OTEL_SERVICE_NAME: 'test-api',
         OTEL_TRACES_EXPORTER: 'otlp',
       }),
     ).toEqual({
-      serviceName: 'tasks-api',
+      serviceName: 'test-api',
       tracesExporter: 'otlp',
     });
   });

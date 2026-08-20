@@ -33,7 +33,7 @@
     "test:e2e": "vitest run --config vitest.e2e.config.ts",
     "test:watch": "vitest --config vitest.config.ts",
     "typecheck": "tsc --noEmit",
-    "verify": "pnpm format:check && pnpm lint && pnpm typecheck && pnpm architecture && pnpm deadcode && pnpm test && pnpm build && pnpm openapi:check && pnpm db:migrate && pnpm test:e2e"
+    "verify": "pnpm format:check && pnpm lint && pnpm typecheck && pnpm architecture && pnpm deadcode && pnpm test && pnpm build && pnpm openapi:check && pnpm test:e2e"
   },
   "dependencies": {
     "@nestjs/common": "^11.2.1",

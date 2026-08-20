@@ -11,7 +11,7 @@ pnpm verify
 ```
 
 `pnpm verify` checks formatting, lint rules, TypeScript, module dependencies, unused production code,
-unit tests, the production build, OpenAPI drift, migrations, and PostgreSQL-backed e2e tests.
+unit tests, the production build, OpenAPI drift, and PostgreSQL-backed e2e tests.
 
 The duplicate analyzer is advisory. Review unresolved candidates with the
 `review-duplicate-logic` skill before consolidating or intentionally separating the implementations.

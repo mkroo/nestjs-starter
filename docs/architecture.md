@@ -14,7 +14,7 @@ Everything else is implementation. `dependency-cruiser` creates a rule for every
 `src/modules` and rejects imports that bypass these entry points.
 
 ```text
-src/modules/tasks/
+src/modules/<feature>/
 ├── index.ts                    # business interface
 ├── composition/index.ts        # Nest composition interface
 ├── application/                # use cases and internal seams
@@ -22,6 +22,10 @@ src/modules/tasks/
 ├── persistence/                # Drizzle schema and PostgreSQL adapter
 └── transport/http/             # controllers and transport DTOs
 ```
+
+The [`example`](https://github.com/mkroo/nestjs-starter/tree/example) branch contains a complete
+Tasks implementation of this structure. The default branch intentionally contains no sample
+business feature.
 
 ## Dependency direction
 

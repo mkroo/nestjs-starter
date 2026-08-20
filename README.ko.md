@@ -19,7 +19,7 @@ API 중심 사이드 프로젝트를 위한 명확한 기술 선택과 운영 �
 | 설정                    | [NestJS Config](https://github.com/nestjs/config), [Zod](https://github.com/colinhacks/zod)                                                                    | 오류가 있으면 시작 즉시 실패하는 타입 기반 환경변수 파싱                     |
 | HTTP 검증               | [class-validator](https://github.com/typestack/class-validator), [class-transformer](https://github.com/typestack/class-transformer)                           | 알 수 없는 필드를 거부하고 요청 DTO를 변환하는 전역 `ValidationPipe`         |
 | 데이터베이스 접근       | [PostgreSQL](https://github.com/postgres/postgres), [node-postgres](https://github.com/brianc/node-postgres)                                                   | PostgreSQL 18 연결 풀과 생명주기 관리                                        |
-| SQL 및 마이그레이션     | [Drizzle ORM and Drizzle Kit](https://github.com/drizzle-team/drizzle-orm)                                                                                     | 타입 안전한 SQL, 모듈별 스키마 소유권 및 저장소에 커밋되는 마이그레이션      |
+| SQL 및 마이그레이션     | [Drizzle ORM and Drizzle Kit](https://github.com/drizzle-team/drizzle-orm)                                                                                     | 타입 안전한 SQL, 모듈별 스키마 소유권 및 생성되는 마이그레이션               |
 | 구조화 로깅             | [Pino](https://github.com/pinojs/pino), [pino-http](https://github.com/pinojs/pino-http), [nestjs-pino](https://github.com/iamolegga/nestjs-pino)              | 운영 환경의 JSON 요청 로그와 로컬 개발 환경의 읽기 쉬운 로그 출력            |
 | 분산 추적               | [OpenTelemetry JS](https://github.com/open-telemetry/opentelemetry-js), [OpenTelemetry JS Contrib](https://github.com/open-telemetry/opentelemetry-js-contrib) | HTTP, NestJS, PostgreSQL 및 Pino 트레이스 연결과 벤더 중립적인 OTLP 내보내기 |
 | API 문서                | [NestJS Swagger](https://github.com/nestjs/swagger)                                                                                                            | Swagger UI와 변경 누락을 검사하는 커밋된 OpenAPI 문서                        |
@@ -37,6 +37,13 @@ API 중심 사이드 프로젝트를 위한 명확한 기술 선택과 운영 �
 특정 PostgreSQL 제공자 전용 SDK는 의도적으로 포함하지 않았습니다. `DATABASE_URL`을 사용해
 PostgreSQL 호환 데이터베이스를 설정할 수 있습니다.
 
+## 참고 구현
+
+기본 브랜치에는 예제 비즈니스 기능을 의도적으로 포함하지 않습니다. PostgreSQL을 사용하는 완전한
+Tasks 수직 슬라이스는 [`example`](https://github.com/mkroo/nestjs-starter/tree/example) 브랜치에서
+확인할 수 있습니다. [`main`과 비교](https://github.com/mkroo/nestjs-starter/compare/main...example)하면
+예제 구현에 해당하는 변경만 볼 수 있습니다.
+
 ## 빠른 시작
 
 Node.js 24, Docker, Corepack이 필요합니다.
@@ -46,7 +53,6 @@ corepack enable
 pnpm install
 cp .env.example .env
 pnpm db:up
-pnpm db:migrate
 pnpm dev
 ```
 
@@ -55,12 +61,7 @@ API는 `http://localhost:3000/api`에서 시작합니다. Swagger UI는
 
 ```bash
 curl http://localhost:3000/api/health/live
-
-curl -X POST http://localhost:3000/api/tasks \
-  -H 'content-type: application/json' \
-  -d '{"title":"Ship the starter"}'
-
-curl http://localhost:3000/api/tasks
+curl http://localhost:3000/api/health/ready
 ```
 
 ## 프로젝트 구조
@@ -71,13 +72,11 @@ src/
 ├── composition/          # 애플리케이션 컴포지션 루트
 ├── config/               # 시작 시 검증하는 환경변수 파싱
 ├── modules/
-│   ├── health/
-│   └── tasks/            # 예제 vertical slice
+│   └── health/           # liveness와 PostgreSQL readiness
 └── platform/
     ├── database/         # pg 연결 풀과 Drizzle 생명주기
     ├── logging/          # Pino 구조화 로깅
     └── telemetry/        # OpenTelemetry tracing 및 OTLP 내보내기
-drizzle/                  # 생성된 SQL 마이그레이션
 openapi/                  # 생성된 OpenAPI 문서
 test/e2e/                 # PostgreSQL 기반 HTTP 테스트
 ```
@@ -113,6 +112,9 @@ test/e2e/                 # PostgreSQL 기반 HTTP 테스트
 
 `pnpm verify`를 실행하려면 PostgreSQL이 실행 중이어야 하고 `DATABASE_URL`이 설정되어야
 합니다. 가장 빠른 방법은 `cp .env.example .env && pnpm db:up`입니다.
+
+기본 브랜치에는 데이터베이스 스키마나 마이그레이션이 없습니다. 영속성 기능을 추가한 후
+`pnpm db:generate`로 마이그레이션을 생성해 커밋하고, `pnpm db:migrate`로 적용합니다.
 
 ## 중복 로직 검토
 
@@ -175,9 +177,9 @@ Grafana, Datadog, Sentry, New Relic, 셀프호스트 SigNoz 또는 OpenTelemetry
 
 ## 의도적으로 포함하지 않은 기능
 
-인증, queue, scheduler, object storage, cache 및 여러 애플리케이션 진입점은 기본
-스타터에 포함하지 않습니다. 모든 프로젝트에서 복잡성 비용을 부담하는 대신 실제로 필요한
-시점에 추가합니다.
+예제 비즈니스 기능, 인증, queue, scheduler, object storage, cache 및 여러 애플리케이션
+진입점은 기본 스타터에 포함하지 않습니다. 모든 프로젝트에서 복잡성 비용을 부담하는 대신 실제로
+필요한 시점에 추가합니다. 완전한 기능 구현은 `example` 브랜치를 참고할 수 있습니다.
 
 ## 라이선스
 

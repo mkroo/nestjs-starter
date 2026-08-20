@@ -19,7 +19,7 @@ included and what the starter configures for it.
 | Configuration              | [NestJS Config](https://github.com/nestjs/config), [Zod](https://github.com/colinhacks/zod)                                                                    | Fail-fast environment parsing with typed configuration                               |
 | HTTP validation            | [class-validator](https://github.com/typestack/class-validator), [class-transformer](https://github.com/typestack/class-transformer)                           | A global `ValidationPipe` that rejects unknown fields and transforms request DTOs    |
 | Database access            | [PostgreSQL](https://github.com/postgres/postgres), [node-postgres](https://github.com/brianc/node-postgres)                                                   | PostgreSQL 18 with pooled connections and lifecycle management                       |
-| SQL and migrations         | [Drizzle ORM and Drizzle Kit](https://github.com/drizzle-team/drizzle-orm)                                                                                     | Typed SQL, module-owned schemas, and committed migrations                            |
+| SQL and migrations         | [Drizzle ORM and Drizzle Kit](https://github.com/drizzle-team/drizzle-orm)                                                                                     | Typed SQL and module-owned schemas with generated migrations                         |
 | Structured logging         | [Pino](https://github.com/pinojs/pino), [pino-http](https://github.com/pinojs/pino-http), [nestjs-pino](https://github.com/iamolegga/nestjs-pino)              | JSON request logging in production and readable local development output             |
 | Distributed tracing        | [OpenTelemetry JS](https://github.com/open-telemetry/opentelemetry-js), [OpenTelemetry JS Contrib](https://github.com/open-telemetry/opentelemetry-js-contrib) | HTTP, NestJS, PostgreSQL, and Pino trace correlation with vendor-neutral OTLP export |
 | API documentation          | [NestJS Swagger](https://github.com/nestjs/swagger)                                                                                                            | Swagger UI and a committed OpenAPI document with drift detection                     |
@@ -37,6 +37,14 @@ through [GitHub Actions](https://github.com/features/actions).
 Provider-specific PostgreSQL SDKs are intentionally excluded. Configure any compatible PostgreSQL
 database with `DATABASE_URL`.
 
+## Reference implementation
+
+The default branch intentionally contains no sample business feature. See the
+[`example`](https://github.com/mkroo/nestjs-starter/tree/example) branch for a complete
+PostgreSQL-backed Tasks vertical slice, or [compare it with
+`main`](https://github.com/mkroo/nestjs-starter/compare/main...example) to see only the example
+implementation.
+
 ## Quick start
 
 Requirements: Node.js 24, Docker, and Corepack.
@@ -46,7 +54,6 @@ corepack enable
 pnpm install
 cp .env.example .env
 pnpm db:up
-pnpm db:migrate
 pnpm dev
 ```
 
@@ -55,12 +62,7 @@ The API starts at `http://localhost:3000/api`. Swagger UI is available at
 
 ```bash
 curl http://localhost:3000/api/health/live
-
-curl -X POST http://localhost:3000/api/tasks \
-  -H 'content-type: application/json' \
-  -d '{"title":"Ship the starter"}'
-
-curl http://localhost:3000/api/tasks
+curl http://localhost:3000/api/health/ready
 ```
 
 ## Project structure
@@ -71,13 +73,11 @@ src/
 ├── composition/          # application composition root
 ├── config/               # fail-fast environment parsing
 ├── modules/
-│   ├── health/
-│   └── tasks/            # sample vertical slice
+│   └── health/           # liveness and PostgreSQL readiness
 └── platform/
     ├── database/         # pg pool and Drizzle lifecycle
     ├── logging/          # Pino structured logging
     └── telemetry/        # OpenTelemetry tracing and OTLP export
-drizzle/                  # generated SQL migrations
 openapi/                  # generated OpenAPI document
 test/e2e/                 # PostgreSQL-backed HTTP tests
 ```
@@ -113,6 +113,9 @@ Read [docs/architecture.md](docs/architecture.md) before adding a feature.
 
 `pnpm verify` expects PostgreSQL to be running and `DATABASE_URL` to be configured. The quickest
 setup is `cp .env.example .env && pnpm db:up`.
+
+The default branch has no database schema or migration. After adding a persistent feature, run
+`pnpm db:generate` and commit the generated migration before applying it with `pnpm db:migrate`.
 
 ## Duplicate logic review
 
@@ -176,9 +179,10 @@ identifier.
 
 ## What is intentionally not included
 
-Authentication, queues, schedulers, object storage, caching, and multiple application entry points
-are deliberately outside the core starter. Add them when a real project needs them instead of
-paying their complexity cost in every project.
+Sample business features, authentication, queues, schedulers, object storage, caching, and multiple
+application entry points are deliberately outside the core starter. Add them when a real project
+needs them instead of paying their complexity cost in every project. The `example` branch is the
+reference for a complete feature.
 
 ## License
 

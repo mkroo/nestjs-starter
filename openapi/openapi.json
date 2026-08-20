@@ -51,51 +51,6 @@
           "health"
         ]
       }
-    },
-    "/api/tasks": {
-      "post": {
-        "operationId": "TasksController_create",
-        "parameters": [],
-        "responses": {
-          "201": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/TaskDto"
-                }
-              }
-            }
-          }
-        },
-        "summary": "Create a task",
-        "tags": [
-          "tasks"
-        ]
-      },
-      "get": {
-        "operationId": "TasksController_list",
-        "parameters": [],
-        "responses": {
-          "200": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/TaskDto"
-                  }
-                }
-              }
-            }
-          }
-        },
-        "summary": "List tasks",
-        "tags": [
-          "tasks"
-        ]
-      }
     }
   },
   "info": {
@@ -107,34 +62,6 @@
   "tags": [],
   "servers": [],
   "components": {
-    "schemas": {
-      "TaskDto": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "string",
-            "format": "uuid"
-          },
-          "title": {
-            "type": "string",
-            "example": "Ship the starter"
-          },
-          "completed": {
-            "type": "boolean",
-            "example": false
-          },
-          "createdAt": {
-            "format": "date-time",
-            "type": "string"
-          }
-        },
-        "required": [
-          "id",
-          "title",
-          "completed",
-          "createdAt"
-        ]
-      }
-    }
+    "schemas": {}
   }
 }

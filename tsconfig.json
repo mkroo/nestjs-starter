@@ -24,6 +24,12 @@
     "skipLibCheck": true,
     "types": ["node"]
   },
-  "include": ["src/**/*.ts", "scripts/**/*.ts", "test/**/*.ts", "*.ts"],
+  "include": [
+    ".agents/skills/*/scripts/**/*.ts",
+    "src/**/*.ts",
+    "scripts/**/*.ts",
+    "test/**/*.ts",
+    "*.ts"
+  ],
   "exclude": ["dist", "node_modules"]
 }

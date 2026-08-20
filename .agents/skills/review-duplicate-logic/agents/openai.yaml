@@ -1,0 +1,4 @@
+interface:
+  display_name: 'Review Duplicate Logic'
+  short_description: 'Review structural duplication before refactoring'
+  default_prompt: 'Use $review-duplicate-logic to review changed TypeScript logic for meaningful duplication.'

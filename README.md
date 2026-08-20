@@ -29,6 +29,7 @@ included and what the starter configures for it.
 | Formatting                 | [Prettier](https://github.com/prettier/prettier)                                                                                                               | Deterministic formatting checked in CI                                               |
 | Architecture checks        | [dependency-cruiser](https://github.com/sverweij/dependency-cruiser)                                                                                           | Circular dependency, deep import, and module-boundary enforcement                    |
 | Dead-code checks           | [Knip](https://github.com/webpro-nl/knip)                                                                                                                      | Detection of unused production files, exports, and dependencies                      |
+| Duplicate logic review     | [TypeScript Compiler API](https://github.com/microsoft/TypeScript), [Codex skills](https://learn.chatgpt.com/docs/build-skills)                                | Advisory AST comparison with an explicit reuse-or-separate decision                  |
 
 Production packaging uses [Docker](https://github.com/docker), and repository verification runs
 through [GitHub Actions](https://github.com/features/actions).
@@ -65,6 +66,7 @@ curl http://localhost:3000/api/tasks
 ## Project structure
 
 ```text
+.agents/skills/         # repository-local agent workflows
 src/
 ├── composition/          # application composition root
 ├── config/               # fail-fast environment parsing
@@ -94,22 +96,57 @@ Read [docs/architecture.md](docs/architecture.md) before adding a feature.
 
 ## Commands
 
-| Command                 | Purpose                                       |
-| ----------------------- | --------------------------------------------- |
-| `pnpm dev`              | Run the API in watch mode                     |
-| `pnpm build`            | Build production JavaScript                   |
-| `pnpm db:generate`      | Generate SQL migrations from feature schemas  |
-| `pnpm db:migrate`       | Apply committed migrations                    |
-| `pnpm db:studio`        | Open Drizzle Studio                           |
-| `pnpm test`             | Run unit and DI smoke tests                   |
-| `pnpm test:e2e`         | Run PostgreSQL-backed HTTP tests              |
-| `pnpm architecture`     | Check module interfaces and cycles            |
-| `pnpm deadcode`         | Check unused production code and dependencies |
-| `pnpm openapi:generate` | Regenerate `openapi/openapi.json`             |
-| `pnpm verify`           | Run the complete local CI pipeline            |
+| Command                   | Purpose                                       |
+| ------------------------- | --------------------------------------------- |
+| `pnpm dev`                | Run the API in watch mode                     |
+| `pnpm build`              | Build production JavaScript                   |
+| `pnpm db:generate`        | Generate SQL migrations from feature schemas  |
+| `pnpm db:migrate`         | Apply committed migrations                    |
+| `pnpm db:studio`          | Open Drizzle Studio                           |
+| `pnpm test`               | Run unit and DI smoke tests                   |
+| `pnpm test:e2e`           | Run PostgreSQL-backed HTTP tests              |
+| `pnpm analyze:duplicates` | Find structurally duplicated production logic |
+| `pnpm architecture`       | Check module interfaces and cycles            |
+| `pnpm deadcode`           | Check unused production code and dependencies |
+| `pnpm openapi:generate`   | Regenerate `openapi/openapi.json`             |
+| `pnpm verify`             | Run the complete local CI pipeline            |
 
 `pnpm verify` expects PostgreSQL to be running and `DATABASE_URL` to be configured. The quickest
 setup is `cp .env.example .env && pnpm db:up`.
+
+## Duplicate logic review
+
+Architecture, framework conventions, and clean-code practices ultimately seek high cohesion and
+low coupling so that software can express more behavior with less accidental complexity. The
+useful unit to minimize is not lines of code but duplicated knowledge and independent change
+points. Two explicit implementations are preferable to one misleading abstraction when similar
+code represents different domain rules, owners, or reasons to change.
+
+The repository turns this principle into an explicit review workflow:
+
+- [`AGENTS.md`](AGENTS.md) requires duplicate-logic review after production TypeScript behavior
+  changes and prevents similarity scores from triggering automatic refactoring.
+- [`review-duplicate-logic`](.agents/skills/review-duplicate-logic/SKILL.md) defines the agent
+  workflow: inspect candidates in context, present evidence, and ask the user to reuse, intentionally
+  separate, or defer the duplicated knowledge.
+- [`decision-rubric.md`](.agents/skills/review-duplicate-logic/references/decision-rubric.md)
+  distinguishes repeated knowledge from coincidental structural similarity using domain ownership,
+  invariants, transaction boundaries, dependencies, and change cadence.
+- [`duplicate-analyzer.ts`](.agents/skills/review-duplicate-logic/scripts/duplicate-analyzer.ts)
+  performs deterministic TypeScript AST normalization and structural comparison. It produces
+  review candidates, not architectural verdicts.
+- [`.duplicate-logic-decisions.json`](.duplicate-logic-decisions.json) records intentional
+  separation and deferred decisions. A decision remains valid only while its candidate fingerprint
+  is unchanged.
+
+Run the analyzer without an agent when needed:
+
+```bash
+pnpm analyze:duplicates -- --changed
+```
+
+The analyzer never refactors code or fails because candidates exist. CI can execute it as a
+deterministic report, while the interactive decision remains with the user.
 
 ## Observability
 

@@ -36,6 +36,17 @@ The Drizzle schema belongs to the feature that owns the table. The database plat
 the connection pool and Drizzle client lifecycle; it does not collect feature schemas or provide a
 generic repository.
 
+## Duplication and abstraction
+
+The goal is to minimize duplicated knowledge and independent change points, not lines of code.
+Extract behavior when occurrences express the same domain rule and should change together. Keep
+similar implementations separate when they have different owners, invariants, transaction
+boundaries, or reasons to change.
+
+The repository-local `review-duplicate-logic` skill uses AST similarity to find evidence for this
+decision. Similarity is advisory: the user decides whether to reuse the knowledge, preserve an
+intentional separation, or defer until the domain is clearer.
+
 ## Adding a feature
 
 1. Create `src/modules/<feature>` with a root `index.ts` and `composition/index.ts`.
@@ -43,4 +54,5 @@ generic repository.
 3. Add an internal persistence seam only when the behavior needs persistence.
 4. Keep the Drizzle schema and adapter under that feature.
 5. Import the Nest module from `src/composition/app.module.ts` through its composition entry point.
-6. Run `pnpm architecture` and `pnpm verify`.
+6. Run `pnpm analyze:duplicates -- --changed` and review unresolved candidates.
+7. Run `pnpm architecture` and `pnpm verify`.

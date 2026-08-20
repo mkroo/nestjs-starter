@@ -11,6 +11,7 @@
     "pnpm": ">=10.34.5 <11"
   },
   "scripts": {
+    "analyze:duplicates": "tsx .agents/skills/review-duplicate-logic/scripts/analyze.ts",
     "architecture": "depcruise src --config dependency-cruiser.config.mjs",
     "build": "tsc -p tsconfig.build.json",
     "db:down": "docker compose down",

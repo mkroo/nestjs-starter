@@ -52,3 +52,6 @@ jobs:
 
       - name: Verify
         run: pnpm verify
+
+      - name: Build container image
+        run: docker build --tag nestjs-starter:ci .

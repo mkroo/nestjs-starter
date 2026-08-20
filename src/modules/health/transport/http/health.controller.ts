@@ -1,13 +1,16 @@
-import { Controller, Get, Inject, ServiceUnavailableException } from '@nestjs/common';
+import { Controller, Get } from '@nestjs/common';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
-import { sql } from 'drizzle-orm';
+import { HealthCheck, HealthCheckService } from '@nestjs/terminus';
 
-import { DATABASE, type Database } from '../../../../platform/database/index.js';
+import { PostgresHealthIndicator } from '../../indicators/postgres.health-indicator.js';
 
 @ApiTags('health')
 @Controller('health')
 export class HealthController {
-  constructor(@Inject(DATABASE) private readonly database: Database) {}
+  constructor(
+    private readonly healthCheckService: HealthCheckService,
+    private readonly postgresHealthIndicator: PostgresHealthIndicator,
+  ) {}
 
   @Get('live')
   @ApiOperation({ summary: 'Check whether the API process is alive' })
@@ -17,15 +20,9 @@ export class HealthController {
   }
 
   @Get('ready')
+  @HealthCheck()
   @ApiOperation({ summary: 'Check whether the API can reach PostgreSQL' })
-  @ApiResponse({ status: 200, schema: { example: { status: 'ok' } } })
-  @ApiResponse({ status: 503, description: 'PostgreSQL is unavailable' })
-  async ready() {
-    try {
-      await this.database.execute(sql`select 1`);
-      return { status: 'ok' as const };
-    } catch (error) {
-      throw new ServiceUnavailableException('Database is unavailable', { cause: error });
-    }
+  ready() {
+    return this.healthCheckService.check([() => this.postgresHealthIndicator.check()]);
   }
 }

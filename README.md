@@ -11,7 +11,8 @@ premature distributed architecture or generic repository abstractions.
 - NestJS 11 with native ESM
 - PostgreSQL 18 and Drizzle ORM
 - Zod environment validation
-- Pino structured logging and request IDs
+- Pino structured logging correlated with OpenTelemetry traces
+- Vendor-neutral OpenTelemetry tracing for HTTP, NestJS, and PostgreSQL
 - Swagger and a committed OpenAPI document
 - Vitest and Supertest
 - ESLint, Prettier, dependency-cruiser, and Knip
@@ -57,7 +58,8 @@ src/
 │   └── tasks/            # sample vertical slice
 └── platform/
     ├── database/         # pg pool and Drizzle lifecycle
-    └── logging/          # Pino and request IDs
+    ├── logging/          # Pino structured logging
+    └── telemetry/        # OpenTelemetry tracing and OTLP export
 drizzle/                  # generated SQL migrations
 openapi/                  # generated OpenAPI document
 test/e2e/                 # PostgreSQL-backed HTTP tests
@@ -93,6 +95,32 @@ Read [docs/architecture.md](docs/architecture.md) before adding a feature.
 
 `pnpm verify` expects PostgreSQL to be running and `DATABASE_URL` to be configured. The quickest
 setup is `cp .env.example .env && pnpm db:up`.
+
+## Observability
+
+OpenTelemetry tracing is always active so Pino request logs include `trace_id` and `span_id` and
+W3C trace context propagates across supported calls. Traces stay inside the process by default:
+
+```env
+OTEL_SERVICE_NAME=nestjs-starter
+OTEL_TRACES_EXPORTER=none
+```
+
+To send traces to any OTLP/HTTP-compatible backend, enable the standard exporter and configure its
+endpoint. Authentication headers and sampling use standard OpenTelemetry environment variables:
+
+```env
+OTEL_TRACES_EXPORTER=otlp
+OTEL_EXPORTER_OTLP_ENDPOINT=https://your-otel-endpoint.example.com
+OTEL_EXPORTER_OTLP_HEADERS=authorization=your-token
+OTEL_TRACES_SAMPLER=parentbased_traceidratio
+OTEL_TRACES_SAMPLER_ARG=0.1
+```
+
+No observability vendor SDK is included. Grafana, Datadog, Sentry, New Relic, a self-hosted SigNoz
+instance, or an OpenTelemetry Collector can be selected without changing application tracing code.
+The application does not create or return an `x-request-id`; `trace_id` is the canonical correlation
+identifier.
 
 ## What is intentionally not included
 

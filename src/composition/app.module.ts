@@ -6,6 +6,7 @@ import { HealthModule } from '../modules/health/composition/index.js';
 import { TasksModule } from '../modules/tasks/composition/index.js';
 import { DatabaseModule } from '../platform/database/composition/index.js';
 import { LoggingModule } from '../platform/logging/composition/index.js';
+import { TelemetryModule } from '../platform/telemetry/composition/index.js';
 
 @Module({
   imports: [
@@ -14,6 +15,7 @@ import { LoggingModule } from '../platform/logging/composition/index.js';
       isGlobal: true,
       validate: parseEnvironment,
     }),
+    TelemetryModule,
     LoggingModule,
     DatabaseModule,
     HealthModule,

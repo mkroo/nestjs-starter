@@ -23,7 +23,7 @@ describe('health', () => {
     const response = await request(server).get('/api/health/live').expect(200);
 
     expect(response.body).toEqual({ status: 'ok' });
-    expect(response.headers).toHaveProperty('x-request-id');
+    expect(response.headers).not.toHaveProperty('x-request-id');
   });
 
   it('reports that PostgreSQL is ready', async () => {
